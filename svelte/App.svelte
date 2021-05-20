@@ -25,9 +25,9 @@
 	const startTour = location.hash.substr(1) == 'tour';
 
 	// User has closed the intro screen
-	function start(){
+	function start(doTour){
 		introShown = false;
-		if(startTour) {
+		if(doTour === true || startTour) {
 			const tour = micrio.modules.markerTours[0];
 			if(!tour) console.error('No tours found!')
 			else tour.start();
@@ -37,5 +37,6 @@
 </script>
 
 {#if introShown}
-	<Intro content={micrio && (micrio.custom.intro||{})} micrio={micrio} on:close={start} />
+	<Intro content={micrio && (micrio.custom.intro||{})} showTourButton={!startTour} micrio={micrio}
+		on:close={start} on:tour={() => start(true)} />
 {/if}
