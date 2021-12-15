@@ -21,6 +21,8 @@
 	// Use custom JSON content from the Micrio editor
 	export let content;
 
+	export let showTourButton = false;
+
 	// Event dispatcher
 	const dispatch = createEventDispatcher();
 
@@ -36,7 +38,12 @@
 		<section transition:fade>
 			<h1>{content.title || micrio.data.title}</h1>
 			{#if content.subtitle}<h2>{content.subtitle}</h2>{/if}
-			<button on:click={() => dispatch('close')}>{content.button || 'start'}</button>
+			<div class="buttons">
+				<button on:click={() => dispatch('close')}>{showTourButton && content.buttonFreeRoam || content.button || 'start'}</button>
+				{#if showTourButton && content.buttonTour}
+					<button on:click={() => dispatch('tour')}>{content.buttonTour}</button>
+				{/if}
+			</div>
 			<div class="flex">
 				<div>
 					<img src="https://b.micr.io/fNwBG/app/img/mouse.png" alt="Mouse" />
@@ -77,7 +84,7 @@
 		color: #fff;
 		padding: 60px;
 		text-align: center;
-		font-size: 1rem;
+		font-size: .9rem;
 		user-select: text;
 	}
 
@@ -92,6 +99,9 @@
 		margin-left: auto;
 		margin-right: auto;
 	}
+	div.buttons {
+		margin-top: 30px;
+	}
 	button {
 		background-color: #e11b22;
 		border: none;
@@ -101,7 +111,7 @@
 		font-weight: bold;
 		padding: 10px 25px;
 		cursor: pointer;
-		margin-top: 30px;
+		margin: 0 10px 10px 10px;
 	}
 	div.flex {
 		display: flex;
@@ -121,10 +131,20 @@
 		line-height: 135%;
 	}
 
+	@media screen and (max-width: 768px) {
+		button {
+			font-size: 150%;
+		}
+	}
 	@media screen and (max-width: 600px) {
 		section {
 			font-size: .9rem;
 			padding: 40px;
+		}
+		button {
+			display: block;
+			width: 100%;
+			margin-bottom: 10px;
 		}
 	}
 	@media screen and (max-width: 420px) {
@@ -140,11 +160,17 @@
 		section {
 			font-size: .75rem;
 		}
+		button {
+			font-size: 150%;
+		}
 	}
 
-	@media screen and (max-height: 420px) {
+	@media screen and (max-height: 568px) {
 		div.flex {
 			display: none;
+		}
+		button {
+			font-size: 150%;
 		}
 	}
 
