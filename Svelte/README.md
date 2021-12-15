@@ -1,4 +1,4 @@
-# Custom Micrio project boilerplate
+# Custom Micrio project boilerplate Svelte
 
 ## Setup and running
 
@@ -13,3 +13,6 @@
 5. See `public/prod.html` for an integration example.
 
 Happy coding!
+
+### Typescript
+If you want to use Typescript you can use this reference file: https://b.micr.io/micrio-3.3.min.d.ts

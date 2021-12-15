@@ -1,0 +1,33 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+micr-io {
+  width: 100%;
+  height: 100%;
+}
+
+/* places the popup in the uppercorner left and gives minimum height */
+.micrio-container micrio-marker-popup.micrio-marker-popup.micrio-marker-popup.class-default {
+	left: 25px;
+	right: auto;
+  min-height: 100px;
+}
+
+/* changes the popup colors */
+.micrio-container micrio-marker-popup.micrio-marker-popup.micrio-marker-popup.class-default article {
+  background-color: lightblue;
+  color: black;
+}
+
+/* places the close button inside the popup, removes background */
+.micrio-container micrio-marker-popup.micrio-marker-popup.micrio-marker-popup.class-default button.close {
+  transform: none;
+  background: none;
+}
+
+/* changes color of popup close button */
+.micrio-container micrio-marker-popup.micrio-marker-popup.micrio-marker-popup.class-default button.close svg {
+  fill: black;
+}
