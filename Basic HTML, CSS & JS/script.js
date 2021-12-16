@@ -1,7 +1,7 @@
 class Main {
-	constructor(container){
-		this.container = container;
-		this.micrio = container.micrio;
+	constructor(){
+		this._container = document.querySelector('micr-io');
+		this.micrio = this._container.micrio;
 
     if(this.micrio) setTimeout(() => this.init());
 		else window.addEventListener('micrio-created', e => {
@@ -40,4 +40,4 @@ class Main {
 }
 
 // Init call
-window.main = new Main(document.querySelector('micr-io'));
+window.app = new Main();
