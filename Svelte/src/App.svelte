@@ -6,6 +6,18 @@
 	// The Micrio HTML element and main controller
 	export let micrio: HTMLMicrioElement;
 
+	// Optional custom JSON from the editor containing an "intro" object for
+	// the intro panel. This is free-form!
+	type CustomIntroScreen = {
+		title?: string;
+		subtitle?: string;
+		button?: string;
+		buttonTour?: string;
+		buttonFreeRoam?: string;
+		mouse?: string;
+		audio?: string;
+	};
+
 	let introShown = true;
 
 	// User has closed the intro screen
@@ -18,22 +30,49 @@
 		}
 	}
 
+	/*
+	 *
+	 * Svelte's $-prefix allows dynamic value reading on Readable and Writable.
+	 * Micrio 4.0 takes full advantage of this by offering these dynamic values.
+	 *
+	 * See more about this here:
+	 *
+	 * https://static.micr.io/docs/client/4.0/modules/Micrio.State.html
+	 * https://static.micr.io/docs/client/4.0/modules/SvelteStore.html
+	 *
+	 */
+
+	// The current active image Store
 	const image = micrio.current;
-	$: data = $image && $image.data;
+
+	// All these variables will auto-initialize -- how cool is that!
+
+	// The image data Store (resolution, title, ...)
 	$: info = $image && $image.info;
-	$: introContent = $info && $info.settings._meta && $info.settings._meta['intro'] || {};
+
+	// The image metadata Store (markers, tours, ..)
+	$: data = $image && $image.data;
+
+	// The custom JSON .intro object, or empty object as fallback
+	$: introContent = ($info && $info.settings._meta && $info.settings._meta['intro'] || {}) as CustomIntroScreen;
+
+	// Check if the image has in-image audio
+	$: hasAudio = $data && ($data.audio.locations.length || $data.audio.playlist.items.length);
+
+	// Check if the image has a tour, and if there is a tour button text specified
+	$: hasTourButton = $data && $data.markerTours.length && introContent.buttonTour;
 
 </script>
 
 {#if introShown}
 	<div class="intro-background" transition:fade>
-		{#if $image}
+		{#if $info}
 			<section transition:fade>
 				<h1>{introContent.title || micrio.$current.$info.title}</h1>
 				{#if introContent.subtitle}<h2>{introContent.subtitle}</h2>{/if}
 				<div class="buttons">
-					<button on:click={() => start()}>{introContent.buttonFreeRoam || introContent.button || 'start'}</button>
-					{#if $data && $data.markerTours.length && introContent.buttonTour}
+					<button on:click={() => start()}>{hasTourButton && introContent.buttonFreeRoam || introContent.button || 'start'}</button>
+					{#if hasTourButton}
 						<button on:click={() => start(true)}>{introContent.buttonTour}</button>
 					{/if}
 				</div>
@@ -42,10 +81,12 @@
 						<img src="https://b.micr.io/fNwBG/app/img/mouse.png" alt="Mouse" />
 						<p>{introContent.mouse || 'Use your mouse'}</p>
 					</div>
-					<div>
-						<img src="https://b.micr.io/fNwBG/app/img/headphone.png" alt="Sound" />
-						<p>{introContent.audio || 'Turn on your sound'}</p>
-					</div>
+					{#if hasAudio}
+						<div>
+							<img src="https://b.micr.io/fNwBG/app/img/headphone.png" alt="Sound" />
+							<p>{introContent.audio || 'Turn on your sound'}</p>
+						</div>
+					{/if}
 				</div>
 			</section>
 		{/if}

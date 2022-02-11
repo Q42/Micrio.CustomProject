@@ -7,9 +7,10 @@ const micrio = document.currentScript && document.currentScript['micrioElement']
 	|| document.querySelector('micr-io');
 
 // Starting function
-const app = new App({
-	target: micrio,
-	props: {micrio}
-});
+function start(el=micrio){ el && new App({target: el, props: {micrio: el}}) }
 
-export default app;
+// If element, already place, the rest of the Micrio loading is handled inside Svelte
+if(micrio) start();
+
+// Otherwise wait for the DOM to load
+else addEventListener('DOMContentLoaded', () => start(document.querySelector('micr-io')))
