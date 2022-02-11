@@ -1,28 +1,10 @@
 class Main {
 	constructor(){
-		this._container = document.querySelector('micr-io');
-		this.micrio = this._container.micrio;
-
-    if(this.micrio) setTimeout(() => this.init());
-		else window.addEventListener('micrio-created', e => {
-			if(!this._container) this._container = e.detail.container;
-			if(!this.micrio) this.micrio = e.detail;
-			setTimeout(() => this.init());
-		});
-  }
-
-  init() {
-    this.micrio.addEventListener('metadata', this.metadata.bind(this));
+		this.micrio = document.querySelector('micr-io');
     this.micrio.addEventListener('marker-opened', this.markerOpened.bind(this));
 		this.micrio.addEventListener('marker-closed', this.markerClosed.bind(this));
   }
   
-  // micrio metadata loaded
-  metadata(e) {
-    const detail = e.detail;
-    console.log('metadata loaded', detail);
-  }
-
   // fires when a  marker is opened
   markerOpened(e) {
     const marker = e.detail;

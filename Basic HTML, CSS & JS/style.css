@@ -9,25 +9,21 @@ micr-io {
 }
 
 /* places the popup in the uppercorner left and gives minimum height */
-.micrio-container micrio-marker-popup.micrio-marker-popup.micrio-marker-popup.class-default {
+micr-io div.marker-popup.static {
 	left: 25px;
-	right: auto;
+	right: auto !important;
   min-height: 100px;
 }
 
 /* changes the popup colors */
-.micrio-container micrio-marker-popup.micrio-marker-popup.micrio-marker-popup.class-default article {
+micr-io .marker-popup article {
   background-color: lightblue;
   color: black;
 }
 
 /* places the close button inside the popup, removes background */
-.micrio-container micrio-marker-popup.micrio-marker-popup.micrio-marker-popup.class-default button.close {
+micr-io .marker-popup button.close {
   transform: none;
   background: none;
-}
-
-/* changes color of popup close button */
-.micrio-container micrio-marker-popup.micrio-marker-popup.micrio-marker-popup.class-default button.close svg {
-  fill: black;
+  --icon-color: lightblue;
 }
