@@ -1,62 +1,55 @@
-<script>
-	import { createEventDispatcher, onMount } from 'svelte';
+<script lang="ts">
+	import type { HTMLMicrioElement } from 'Micrio';
+
 	import { fade } from 'svelte/transition'
 
-	/*
-		For custom fields, create a JSON object "intro" in the "Custom"
-		tab under Image settings in the Micrio editor, like this:
+	// The Micrio HTML element and main controller
+	export let micrio: HTMLMicrioElement;
 
-		intro: {
-			title: 'your title', // Optional custom title
-			subtitle: 'subtitle..',
-			button: 'button text',
-			mouse: 'text under mouse',
-			audio: 'audio notice'
+	let introShown = true;
+
+	// User has closed the intro screen
+	function start(doTour?:boolean) : void {
+		introShown = false;
+		if(doTour === true) {
+			const tour = $data.markerTours[0];
+			if(!tour) console.error('No tours found!')
+			else micrio.state.tour.set(tour);
 		}
-	*/
+	}
 
-	// The Micrio image instance
-	export let micrio;
+	const image = micrio.current;
+	$: data = $image && $image.data;
+	$: info = $image && $image.info;
+	$: introContent = $info && $info.settings._meta && $info.settings._meta['intro'] || {};
 
-	// Use custom JSON content from the Micrio editor
-	export let content;
-
-	export let showTourButton = false;
-
-	// Event dispatcher
-	const dispatch = createEventDispatcher();
-
-	// For fading in
-	let shown;
-
-	onMount(() => shown = true);
 </script>
 
-{#if shown}
-<div class="intro-background" transition:fade>
-	{#if micrio}
-		<section transition:fade>
-			<h1>{content.title || micrio.data.title}</h1>
-			{#if content.subtitle}<h2>{content.subtitle}</h2>{/if}
-			<div class="buttons">
-				<button on:click={() => dispatch('close')}>{showTourButton && content.buttonFreeRoam || content.button || 'start'}</button>
-				{#if showTourButton && content.buttonTour}
-					<button on:click={() => dispatch('tour')}>{content.buttonTour}</button>
-				{/if}
-			</div>
-			<div class="flex">
-				<div>
-					<img src="https://b.micr.io/fNwBG/app/img/mouse.png" alt="Mouse" />
-					<p>{content.mouse || 'Use your mouse'}</p>
+{#if introShown}
+	<div class="intro-background" transition:fade>
+		{#if $image}
+			<section transition:fade>
+				<h1>{introContent.title || micrio.$current.$info.title}</h1>
+				{#if introContent.subtitle}<h2>{introContent.subtitle}</h2>{/if}
+				<div class="buttons">
+					<button on:click={() => start()}>{introContent.buttonFreeRoam || introContent.button || 'start'}</button>
+					{#if $data && $data.markerTours.length && introContent.buttonTour}
+						<button on:click={() => start(true)}>{introContent.buttonTour}</button>
+					{/if}
 				</div>
-				<div>
-					<img src="https://b.micr.io/fNwBG/app/img/headphone.png" alt="Sound" />
-					<p>{content.audio || 'Turn on your sound'}</p>
+				<div class="flex">
+					<div>
+						<img src="https://b.micr.io/fNwBG/app/img/mouse.png" alt="Mouse" />
+						<p>{introContent.mouse || 'Use your mouse'}</p>
+					</div>
+					<div>
+						<img src="https://b.micr.io/fNwBG/app/img/headphone.png" alt="Sound" />
+						<p>{introContent.audio || 'Turn on your sound'}</p>
+					</div>
 				</div>
-			</div>
-		</section>
-	{/if}
-</div>
+			</section>
+		{/if}
+	</div>
 {/if}
 
 <style>
@@ -87,7 +80,6 @@
 		font-size: .9rem;
 		user-select: text;
 	}
-
 	h1 {
 		font-size: 250%;
 		margin: 0;
@@ -130,7 +122,6 @@
 		font-size: 90%;
 		line-height: 135%;
 	}
-
 	@media screen and (max-width: 768px) {
 		button {
 			font-size: 150%;
@@ -164,7 +155,6 @@
 			font-size: 150%;
 		}
 	}
-
 	@media screen and (max-height: 568px) {
 		div.flex {
 			display: none;
@@ -173,5 +163,4 @@
 			font-size: 150%;
 		}
 	}
-
 </style>
