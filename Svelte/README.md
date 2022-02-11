@@ -1,5 +1,9 @@
 # Custom Micrio project boilerplate Svelte
 
+This example adds an intro popup when loading the Micrio image, and checks
+for conditionals such as audio and available tours. Its text content uses
+custom fields from the Micrio editor's Custom JSON editor.
+
 ## Setup and running
 
 1. Type `npm i` in the project path

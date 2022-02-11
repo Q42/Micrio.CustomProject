@@ -1,6 +1,8 @@
 <script lang="ts">
+	// This includes all Micrio type definitions from the .d.ts include
 	import type { HTMLMicrioElement } from 'Micrio';
 
+	// Use the Svelte DOM element fader for transitions
 	import { fade } from 'svelte/transition'
 
 	// The Micrio HTML element and main controller
@@ -18,12 +20,13 @@
 		audio?: string;
 	};
 
-	let introShown = true;
+	// The main intro toggler
+	let introShown:boolean = true;
 
 	// User has closed the intro screen
 	function start(doTour?:boolean) : void {
 		introShown = false;
-		if(doTour === true) {
+		if(doTour) {
 			const tour = $data.markerTours[0];
 			if(!tour) console.error('No tours found!')
 			else micrio.state.tour.set(tour);
